@@ -1,0 +1,38 @@
+import time
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+# Set up the WebDriver
+driver = webdriver.Chrome()
+
+# Maximize the browser window
+driver.maximize_window()
+
+# Navigate to the shop URL
+driver.get("https://gb.bishalkarki.com/index.php?controller=order&ipa=4")
+
+# Wait for the page to load
+time.sleep(5)
+
+# Locate the search input field
+search_box = WebDriverWait(driver, 10).until(
+    EC.presence_of_element_located((By.XPATH, '//*[@id="search_query_top"]'))
+)
+search_box.clear()  # Clear any pre-filled text in the search box
+search_box.send_keys("dresses")  # Type 'dresses' in the search box
+print("Entered 'dresses' in the search box.")
+
+# Locate the search icon and click it
+search_icon = WebDriverWait(driver, 10).until(
+    EC.element_to_be_clickable((By.XPATH, '//*[@id="searchbox"]/button'))
+)
+search_icon.click()  # Click on the search icon
+print("Clicked on the search icon.")
+
+# Wait for the search results to load
+time.sleep(5)
+
+# Close the browser
+driver.quit()
