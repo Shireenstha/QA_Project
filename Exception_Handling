@@ -1,0 +1,52 @@
+# from selenium import webdriver
+# from selenium.webdriver.common.by import By
+# from selenium.webdriver.common.exceptions import Exception, WebDriverException
+# from selenium.webdriver.chrome.options import Options
+#
+# # Set up WebDriver options (optional)
+# chrome_options = Options()
+# chrome_options.add_argument("--start-maximized")  # Maximize the browser window
+#
+# # Initialize WebDriver (Selenium Manager will handle ChromeDriver path)
+# driver = webdriver.Chrome(options=chrome_options)
+#
+# try:
+#     # Open the website
+#     driver.get("https://demoblaze.com")
+#
+#     # Attempt to locate and interact with elements
+#     nav_login = driver.find_element(By.ID, "login2")
+#     nav_login.click()
+#
+#     txt_box_username = driver.find_element(By.ID, "loginusername")
+#     txt_box_username.send_keys("testmorning")
+#     print("Running from try block")
+#
+#     txt_box_password = driver.find_element(By.ID, "loginpassword")
+#     txt_box_password.send_keys("test123")
+#
+#     login_button = driver.find_element(By.XPATH, '//*[@id="logInModal"]/div/div/div[3]/button[2]')
+#     login_button.click()
+#
+# except Exception:
+#     print("I am running from NoSuchElementException")
+#
+#     # Retry with a slight delay (if necessary)
+#     driver.implicitly_wait(10)  # Retry after waiting
+#
+#     txt_box_username = driver.find_element(By.ID, "loginusername")
+#     txt_box_username.send_keys("testmorning")
+#
+#     txt_box_password = driver.find_element(By.ID, "loginpassword")
+#     txt_box_password.send_keys("test123")
+#
+#     login_button = driver.find_element(By.XPATH, '//*[@id="logInModal"]/div/div/div[3]/button[2]')
+#     login_button.click()
+#
+# except Exception as e:
+#     # Generic exception handling
+#     print(f"Unable to login because of {e}")
+#
+# finally:
+#     # Close the browser after the execution
+#     driver.quit()
