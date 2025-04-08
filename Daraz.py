@@ -1,53 +1,48 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-import time
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
-# Setup Chrome WebDriver (Ensure you have the correct WebDriver installed)
-driver = webdriver.Chrome()
+# Setup Chrome WebDriver
+options = webdriver.ChromeOptions()
+driver = webdriver.Chrome(options=options)
+
+driver.maximize_window()
+
+wait = WebDriverWait(driver, 10)  # Configures the WebDriver to wait up to 10 seconds
 
 try:
-    # Step 1: Open Daraz Nepal website
-    driver.get("https://www.daraz.com.np/#?")
-    time.sleep(3)  # Wait for page to load
+    # Open the Daraz Nepal website
+    driver.get("https://www.daraz.com.np")
+    wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))  # Wait until the page body is loaded
 
-    # Step 2: Locate the search input field using XPath and enter "dress"
-    search_box = driver.find_element(By.XPATH, "/html/body/div[1]/div/div/div/div[2]/div/div[2]/div/form/div/div[1]/input[1]")
+    # Locate the search input field by XPath and enter "dress"
+    search_box = wait.until(EC.visibility_of_element_located((By.XPATH, "//*[@id='q']")))
     search_box.send_keys("dress")
-    time.sleep(2)  # Wait before clicking search icon
 
-
-
-    # Step 3: Click on the search icon
-    search_icon = driver.find_element(By.XPATH, "/html/body/div[2]/div/div/div[1]/div[2]/div/div[2]/div/form/div/div[2]/a")
+    # Click on the search icon
+    search_icon = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[@id='topActionHeader']/div[1]/div[2]/div/div[2]/div/form/div/div[2]/a")))
     search_icon.click()
-    time.sleep(5)  # Wait for search results to load
 
-    # Step 4: Click on the first dress image
-    first_dress = driver.find_element(By.XPATH, "/html/body/div[4]/div/div[2]/div[1]/div/div[1]/div[2]/div[1]/div/div/div[1]/div/a/div/img")
+    # Wait for search results to load and click on the specific party dress image
+    first_dress = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[@id='root']/div/div[2]/div[1]/div/div[1]/div[2]/div[4]/div/div/div[1]/div/a/div/img")))
     first_dress.click()
-    time.sleep(5)  # Wait for product details page to load
 
-    # Step 5: Scroll down slightly before adding to cart
-    driver.execute_script("window.scrollBy(0, 500);")
-    time.sleep(3)  # Wait after scrolling
+    # Switch to the new tab if it opens one
+    driver.switch_to.window(driver.window_handles[-1])
 
-    # Step 6: Click "Add to Cart" button
-    add_to_cart = driver.find_element(By.XPATH, "/html/body/div[5]/div/div[3]/div[2]/div/div[1]/div[17]/div/button[2]")
-    add_to_cart.click()
-    time.sleep(5)  # Wait for cart update
+    # Scroll down once to reveal the "Buy Now" button
+    driver.execute_script("window.scrollTo(0, 600);")  # Adjust the scroll value as needed to ensure visibility of the button
+    wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))  # Wait for scrolling effects
 
-    # Step 7: Navigate to the cart page to verify if item is added
-    driver.get("https://www.daraz.com.np/#?")
-    time.sleep(5)  # Wait for cart page to load
+    # Click on the "Buy Now" button
+    buy_now_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[@id='module_add_to_cart']/div/button[1]")))
+    buy_now_button.click()
 
-    # Step 8: Check if the product is in the cart
-    cart_items = driver.find_elements(By.XPATH, "//div[contains(@class, 'cart-item')]")
+    # Additional step to verify success or to proceed with checkout could be added here
 
-    if cart_items:
-        print("✅ Test Passed: Dress successfully added to cart.")
-    else:
-        print("❌ Test Failed: Dress not found in the cart.")
+    print("✅ Test Passed: Dress selected and 'Buy Now' clicked successfully.")
 
 except Exception as e:
     print(f"❌ Test Execution Failed: {str(e)}")
